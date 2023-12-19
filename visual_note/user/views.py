@@ -5,6 +5,8 @@ from user.serializers import UserSerializer
 from user.models import User
 from visual_note.authentication import create_access_token, create_refresh_token
 from django.contrib.auth.hashers import make_password
+from visual_note.authentication import IsAuthentication
+from rest_framework.generics import get_object_or_404
 
 
 class RegisterAPIView(APIView):
@@ -72,3 +74,28 @@ class LogoutAPIView(APIView):
                 'message': ('Çıkış İşlemi Başarılı')
             }
             return response
+
+
+class UpdateAPIView(APIView):
+    authentication_classes = [IsAuthentication]
+
+    def get_object(self, pk):
+        user_instance = get_object_or_404(User, pk=pk)
+        return user_instance
+
+    def put(self, request, *args, **kwargs):
+        user = IsAuthentication.authenticate(self, request)
+        print("User ---->>", user[0])
+        pk = user[0].pk
+        user_id = user[0].pk
+        print("Gelen Data : ", request.data)
+
+        degerlendirme = self.get_object(pk=pk)
+        serializer = UserSerializer(degerlendirme, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        error_dict = {}
+        for field, errors in serializer.errors.items():
+            error_dict[field] = str(errors[0])
+        return Response({"message": error_dict}, status=status.HTTP_200_OK)
