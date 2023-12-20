@@ -11,7 +11,6 @@ from rest_framework.generics import get_object_or_404
 
 class RegisterAPIView(APIView):
     def post(self, request):
-        print("Gelen Data : ", request.data)
         request.data['username'] = "kullanici"
 
         user = User.objects.filter(email=request.data.get("email")).first()
@@ -35,7 +34,6 @@ class LoginAPIView(APIView):
     tokens = serializers.SerializerMethodField()
 
     def post(self, request):
-        print("Gelen Dataya Bakk ---->>>> ", request.data)
         liste = User.objects.all()
         user = liste.filter(email=request.data['email']).first()
         if not user:
@@ -61,7 +59,6 @@ class LoginAPIView(APIView):
 
 class LogoutAPIView(APIView):
     def post(self, request):
-        print("Gelen Data : ", request.data)
         user = User.objects.filter(
             refresh_token=request.data['refresh_token']).first()
         if not user:
@@ -89,6 +86,14 @@ class UpdateAPIView(APIView):
         pk = user[0].pk
         user_id = user[0].pk
         print("Gelen Data : ", request.data)
+
+        if not request.data.get("password"):
+            request.data['password'] = user[0].password
+        else:
+            request.data['password'] = make_password(request.data['password'])
+
+        if not request.data.get("username"):
+            request.data['username'] = user[0].username
 
         degerlendirme = self.get_object(pk=pk)
         serializer = UserSerializer(degerlendirme, data=request.data)
