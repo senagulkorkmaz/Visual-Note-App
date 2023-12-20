@@ -20,4 +20,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('google_register/', include('allauth.urls')),
     path('user/', include('user.urls')),
+    path('folder/', include('folder.urls')),
+    path('note/', include('note.urls')),
 ]
