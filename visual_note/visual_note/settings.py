@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'folder',
     'note',
     'diary',
+    'to_do_list',
 ]
 
 MIDDLEWARE = [
