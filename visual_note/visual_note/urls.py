@@ -24,4 +24,5 @@ urlpatterns = [
     path('note/', include('note.urls')),
     path('diary/', include('diary.urls')),
     path('to_do_list/', include('to_do_list.urls')),
+    path('planner/', include('planner.urls')),
 ]
