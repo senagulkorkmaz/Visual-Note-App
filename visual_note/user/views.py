@@ -95,8 +95,8 @@ class UpdateAPIView(APIView):
         if not request.data.get("username"):
             request.data['username'] = user[0].username
 
-        degerlendirme = self.get_object(pk=pk)
-        serializer = UserSerializer(degerlendirme, data=request.data)
+        user = self.get_object(pk=pk)
+        serializer = UserSerializer(user, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
